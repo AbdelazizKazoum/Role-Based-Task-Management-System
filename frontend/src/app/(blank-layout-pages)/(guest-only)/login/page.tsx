@@ -1,11 +1,13 @@
+/* eslint-disable import/no-unresolved */
 // Next Imports
 import type { Metadata } from 'next'
 
 // Component Imports
 import Login from '@views/Login'
 
+import { getServerMode } from '@/@core/utils/serverHelpers'
+
 // Server Action Imports
-import { getServerMode } from '@core/utils/serverHelpers'
 
 export const metadata: Metadata = {
   title: 'Login',
