@@ -2,9 +2,8 @@
 import KeycloakProvider from 'next-auth/providers/keycloak'
 import type { NextAuthOptions } from 'next-auth'
 
-console.log(process.env.KEYCLOAK_CLIENT_SECRET)
 export const authOptions: NextAuthOptions = {
-  // 🔐 Configure only Keycloak provider
+  // Configure Keycloak provider
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_CLIENT_ID as string,
@@ -13,20 +12,24 @@ export const authOptions: NextAuthOptions = {
     })
   ],
 
-  // 📦 Session config
+  // Session config
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
 
-  // 📄 Custom sign-in page
+  // Custom sign-in page
   pages: {
     signIn: '/login'
   },
 
-  // 🔁 Callbacks
+  // Callbacks
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, profile, account }) {
+      console.log('🚀 ~ jwt ~ account:', account)
+      console.log('🚀 ~ jwt ~ profile:', profile)
+      console.log('🚀 ~ jwt ~ user:', user)
+
       if (user) {
         token.name = user.name
         token.email = user.email
