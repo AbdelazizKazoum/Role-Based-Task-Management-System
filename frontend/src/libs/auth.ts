@@ -25,19 +25,27 @@ export const authOptions: NextAuthOptions = {
 
   // Callbacks
   callbacks: {
-    async jwt({ token, user, profile, account }) {
-      console.log('🚀 ~ jwt ~ account:', account)
-      console.log('🚀 ~ jwt ~ profile:', profile)
+    async jwt({ token, account, user }) {
       console.log('🚀 ~ jwt ~ user:', user)
+      console.log('🚀 ~ jwt ~ account:', account)
 
-      if (user) {
+      if (user && account?.id_token) {
         token.name = user.name
         token.email = user.email
+
+        const idToken = JSON.parse(Buffer.from(account.id_token.split('.')[1], 'base64').toString())
+
+        console.log('🚀 ~ jwt ~ idToken:', idToken)
+
+        // Example: Get roles from realm_access
+        token.roles = idToken.realm_access?.roles || []
       }
 
       return token
     },
     async session({ session, token }) {
+      console.log('🚀 ~ session ~ session:', token)
+
       if (session.user) {
         session.user.name = token.name
         session.user.email = token.email
